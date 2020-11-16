@@ -1,4 +1,4 @@
-This is a ticket viewer that connects to Zendesk's API it can:
+This is a ticket viewer that uses Zendesk's API it can:
 
 • Request tickets from your account		
 
@@ -8,4 +8,17 @@ This is a ticket viewer that connects to Zendesk's API it can:
 
 • Page through tickets when more than 25 are returned
 
-adding more soon...
+
+
+The Ticket Viewer displays on a command line interface.
+
+To run the main program download Main.java and Ticket.java located in:
+
+Main: ZendeskTicketViewer/src/ticketviewer
+
+Test: ZendeskTicketViewer/src/test
+
+Outside libraries that were used were Gson to parse Json data
+
+Gson Library:
+https://github.com/google/gson
