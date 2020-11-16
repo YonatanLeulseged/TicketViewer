@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -17,74 +16,119 @@ public class Main {
 	private static HttpURLConnection connection;
 
 	public static void main(String[] args) {
-		
-		apiConnect();
-		
 
-		
+		apiConnect();
+
 	}
-	
+
+	// Establishes connection with Zendesk API and runs
 	public static void apiConnect() {
 
-		
-		ArrayList<Ticket> tickets;
-
 		try {
-			URL url = new URL("https://teamyonatan.zendesk.com/api/v2/imports/tickets/tickets.json/");
+			// Url connection to grab tickets
+			URL url = new URL("https://teamyonatan.zendesk.com/api/v2/tickets.json/");
 			connection = (HttpURLConnection) url.openConnection();
 
 			String credentials = ("yleulseged@gmail.com" + ":" + "GoldenRetriever37");
+			// Encoding into base64 credentials for header to accept
 			String encodeBytes = Base64.getEncoder().encodeToString((credentials).getBytes());
 
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("Authorization", "Basic " + encodeBytes);
-			connection.setConnectTimeout(5000);
-			connection.setReadTimeout(5000);
 
-			String line = "";
 			InputStreamReader inputReader = new InputStreamReader(connection.getInputStream());
 			BufferedReader bReader = new BufferedReader(inputReader);
-			StringBuilder response = new StringBuilder();
-
-			System.out.println("Response : " + response.toString());
-
 			int status = connection.getResponseCode();
 
+			// If we get status code 200
+			if (status == connection.HTTP_OK) {
 
-			System.out.println(status);
+				Gson gson = new Gson();
+				BufferedReader br = null;
+				br = new BufferedReader(inputReader);
+				Ticket ticket = gson.fromJson(br, Ticket.class);
 
-			if (status == 200) {
-				
-				populateReader(inputReader);
-				
-				while ((line = bReader.readLine()) != null) {
-					response.append(line);
+				String userChoice = "";
+
+				// Main area: Where user chooses options
+				while (!userChoice.equalsIgnoreCase("q")) {
+
+					// Calls for user input in Interface method
+					userChoice = Interface();
+
+					switch (userChoice) {
+
+					case "1":
+						requestAll(ticket);
+						break;
+
+					case "2":
+						requestOne(ticket);
+						break;
+
+					case "q":
+						break;
+
+					default:
+						System.out.println("Please input either: '1' , '2' , or 'q'  ");
+						System.out.println("\n" + "\n");
+						break;
+
+					}
 				}
-				bReader.close();
+				System.out.println("Ending ticket viewer... Thank you come again!");
 
 			}
-			else if(status == 200) {
-				System.out.println("Hmm, something is off. Check your credentials or try again.");
-				throw new RuntimeException("HttpRespondseCode: " + status);
+			// Exception handling
+			else if (status == connection.HTTP_BAD_REQUEST) {
+				System.out.println("The URL you're sending us doesn't seem to exist");
+				throw new RuntimeException("HttpResponseCode: " + status);
+			} else if (status == connection.HTTP_SERVER_ERROR) {
+				System.out.println("That's on us. We'll try to get it back up soon");
+				throw new RuntimeException("HttpResponseCode: " + status);
+			} else if (status == connection.HTTP_FORBIDDEN) {
+				System.out.println("The URL you're giving me is forbidden");
+				throw new RuntimeException("HttpResponseCode: " + status);
+			} else if (status == connection.HTTP_UNAVAILABLE) {
+				System.out.println("The URL you're giving me is unavailable");
+				throw new RuntimeException("HttpResponseCode: " + status);
 			}
-			//add else if for general http exceptions
 
+			bReader.close();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
-	public static void populateReader(InputStreamReader reader) {
-		Gson gson = new Gson();
-		BufferedReader br = null;
+	// Prints out 25 tickets each request
+	public static void requestAll(Ticket ticket) {
+		Scanner scan = new Scanner(System.in);
+		int input = 0;
 		try {
-			br = new BufferedReader(reader);
-			Ticket ticket = gson.fromJson(br, Ticket.class);
 			if (ticket != null) {
 				for (Ticket t : ticket.getTickets()) {
-					System.out.println(t.getId() + " - " + t.getSubject() + " - " + t.getStatus());
+
+					System.out.println(t.toString());
+
+					if (t.getId() % 25 == 0) {
+						System.out.println("--------------------------------------");
+						System.out.println("\n" + "\n");
+						System.out.println("View next 25 tickets: type '1' ");
+						System.out.println("Main Menu: type 2");
+						System.out.println(" ");
+						input = scan.nextInt();
+
+						if (input == 2) {
+							break;
+						}
+						if (input == 1) {
+
+						}
+					}
+
 				}
 			}
 		} catch (Exception e) {
@@ -93,25 +137,45 @@ public class Main {
 
 	}
 
-	public static void Interface() {
+	// Main menu Interface: Grabs user input
+	public static String Interface() {
 
 		Scanner kb = new Scanner(System.in);
+		String input = "";
 
-		while (kb.nextLine() != "quit") {
+		System.out.println("Welcome to the ticket viewer");
+		System.out.println("Select view options:");
+		System.out.println("Press 1 to view all tickets");
+		System.out.println("Press 2 to view a ticket");
+		System.out.println("Type 'q' to quit");
+		System.out.print("\n" + "\n");
+		input = kb.next();
 
-			System.out.println("Welcome to the ticket viewer");
-			System.out.println("Select view options:");
-			System.out.println("Press 1 to view all tickets");
-			System.out.println("Press 2 to view a ticket");
-			System.out.println("Type 'quit to exit");
+		return input;
+	}
 
-			if (kb.nextInt() == 1) {
-				// call allTickets()
-			} else if (kb.nextInt() == 2) {
-				// call oneTicket(int ticket)
+	// Displays one individual ticket via id
+	public static void requestOne(Ticket ticket) {
+
+		Scanner scanId = new Scanner(System.in);
+
+		System.out.println("Enter ticket number: ");
+		String id = scanId.nextLine();
+
+		try {
+			if (ticket != null) {
+				for (Ticket t : ticket.getTickets()) {
+
+					if (t.getId() == Integer.parseInt(id)) {
+						System.out.println(t.toString());
+					}
+				}
+
 			}
-
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 	}
 
 }
