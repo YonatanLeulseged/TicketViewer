@@ -19,7 +19,10 @@ Main: ZendeskTicketViewer/src/ticketviewer
 
 Test: ZendeskTicketViewer/src/test
 
-Outside libraries that were used were Gson to parse Json data
+Outside libraries that were used were Gson to parse Json data and Rest assured for testing and validating.
 
 Gson Library:
 https://github.com/google/gson
+
+Rest Assured:
+https://rest-assured.io/
