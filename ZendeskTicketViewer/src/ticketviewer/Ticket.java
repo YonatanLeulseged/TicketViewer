@@ -81,5 +81,10 @@ public class Ticket {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public String toString() {
+		return "id: " + this.id + "\n" + "Subject: " + this.subject + "\n" + "Ticket Description: " + this.description
+				+ "\n" + "Created at: " + this.created_at + "\n";
+	}
 }
 
