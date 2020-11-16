@@ -1,4 +1,3 @@
-##Intern Coding Challenge 
 
 This is a ticket viewer that uses Zendesk's API it can:
 
