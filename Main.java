@@ -36,7 +36,6 @@ public class Main {
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("Authorization", "Basic " + encodeBytes);
 
-
 			InputStreamReader inputReader = new InputStreamReader(connection.getInputStream());
 			BufferedReader bReader = new BufferedReader(inputReader);
 			int status = connection.getResponseCode();
@@ -57,26 +56,26 @@ public class Main {
 					// Calls for user input in Interface method
 					userChoice = Interface();
 
-				switch (userChoice) {
+					switch (userChoice) {
 
-				case "1":
-					requestAll(ticket);
-					break;
+					case "1":
+						requestAll(ticket);
+						break;
 
-				case "2":
-					requestOne(ticket);
-					break;
+					case "2":
+						requestOne(ticket);
+						break;
 
-				case "q":
-					break;
+					case "q":
+						break;
 
-				default:
-					System.out.println("Please input either: '1' , '2' , or 'q'  ");
-					System.out.println("\n" + "\n");
-					break;
+					default:
+						System.out.println("Please input either: '1' , '2' , or 'q'  ");
+						System.out.println("\n" + "\n");
+						break;
 
+					}
 				}
-			}
 				System.out.println("Ending ticket viewer... Thank you come again!");
 
 			}
@@ -94,14 +93,13 @@ public class Main {
 				System.out.println("The URL you're giving me is unavailable");
 				throw new RuntimeException("HttpResponseCode: " + status);
 			}
-			
+
 			bReader.close();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 
 	}
 
@@ -114,23 +112,22 @@ public class Main {
 				for (Ticket t : ticket.getTickets()) {
 
 					System.out.println(t.toString());
-					
-					if (t.getId() % 25 == 0 ) {
-							System.out.println("--------------------------------------");
-							System.out.println("\n" + "\n");
-							System.out.println("View next 25 tickets: type '1' ");
-							System.out.println("Main Menu: type 2");
-							System.out.println(" ");
-							input = scan.nextInt();
-							
-							if (input == 2) {
-								break;
-							}
-							if (input == 1) {
-								
-							}
-						}
 
+					if (t.getId() % 25 == 0) {
+						System.out.println("--------------------------------------");
+						System.out.println("\n" + "\n");
+						System.out.println("View next 25 tickets: type '1' ");
+						System.out.println("Main Menu: type 2");
+						System.out.println(" ");
+						input = scan.nextInt();
+
+						if (input == 2) {
+							break;
+						}
+						if (input == 1) {
+
+						}
+					}
 
 				}
 			}
@@ -166,18 +163,18 @@ public class Main {
 		String id = scanId.nextLine();
 
 		try {
-		if (ticket != null) {
-			for (Ticket t : ticket.getTickets()) {
+			if (ticket != null) {
+				for (Ticket t : ticket.getTickets()) {
 
-				if (t.getId() == Integer.parseInt(id)) {
-					System.out.println(t.toString());
+					if (t.getId() == Integer.parseInt(id)) {
+						System.out.println(t.toString());
+					}
 				}
-			}
 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
 
 	}
 
