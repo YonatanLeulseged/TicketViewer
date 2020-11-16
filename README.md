@@ -1,12 +1,13 @@
 This is a ticket viewer that uses Zendesk's API it can:
 
-• Request tickets from your account		
+• Request tickets from your account	 </br>	
 
-• Display them in a list
+• Display them in a list </br>
 
-• Display individual ticket details
+• Display individual ticket details </br>
 
-• Page through tickets when more than 25 are returned
+• Page through tickets when more than 25 are returned</br>
+
 
 
 
