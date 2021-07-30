@@ -29,7 +29,7 @@ public class Main {
 			URL url = new URL("https://teamyonatan.zendesk.com/api/v2/tickets.json/");
 			connection = (HttpURLConnection) url.openConnection();
 
-			String credentials = ("yleulseged@gmail.com" + ":" + "GoldenRetriever37");
+			String credentials = ("yleulseged@gmail.com" + ":" + "pwd");
 			// Encoding into base64 credentials for header to accept
 			String encodeBytes = Base64.getEncoder().encodeToString((credentials).getBytes());
 
